@@ -1,0 +1,15 @@
+<div class="edit-item-container">
+
+  <div class="item-wrapper" *ngIf="!isEdit"> <span class="title">{{title}}</span>
+    <span class="val">{{val}}</span>
+  </div>
+
+  <div class="item-wrapper" *ngIf="isEdit">
+    <div class="p-float-label">
+      <input [ngStyle]="{ 'width': width }" (ngModelChange)="update($event)" [(ngModel)]="val" id="float-input" type="{{type}}"
+        pInputText>
+      <label for="float-input">{{title}}</label>
+    </div>
+  </div>
+
+</div>

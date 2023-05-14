@@ -1,0 +1,165 @@
+<div class="inventory-index-container">
+  <div class="content-wrapper">
+
+    <div class="vender-search-wrapper">
+      <div class="g-sub-title g-mr-12">選擇廠商</div>
+      <app-auto-vender (selectUpdate)="selectedVenderUpdate($event)"></app-auto-vender>
+      <div class="g-sub-title g-mr-12 g-ml-24">產品序號/名稱</div>
+      <div class="g-mr-12">
+        序號:
+        <p-autoComplete (onBlur)="serialNoInputOnBlue()" [(ngModel)]="selectedItemModel" [suggestions]="itemNoSuggList"
+          field="serialNo" (completeMethod)="searchItemNo($event)"></p-autoComplete>
+      </div>
+
+      <div>
+        名稱:
+        <p-autoComplete (onBlur)="nameInputOnBlur()" [(ngModel)]="selectedItemModel" [suggestions]="itemNameSuggList"
+          field="name" (completeMethod)="searchItemName($event)"></p-autoComplete>
+      </div>
+
+    </div>
+
+    <div class="history-price-block g-mt-12">
+      <div class="g-sub-title">歷史價格</div>
+      <div *ngFor="let item of priceHistoryList">
+        {{item.createTime}} / {{item.price}}
+      </div>
+      <div *ngIf="priceHistoryList.length === 0">
+        {{priceHint}}
+      </div>
+
+    </div>
+
+
+
+    <p-divider></p-divider>
+
+    <div>
+      <div class="item-info-wrapper">
+        <div class="info-item g-mr-12">
+          <div> 序號:</div>
+          <input [(ngModel)]="newItemModel.serialNo" type="text" pInputText>
+        </div>
+
+        <div class="info-item g-mr-12">
+          <div> 名稱:</div>
+          <input [(ngModel)]="newItemModel.name" type="text" pInputText>
+        </div>
+
+        <div class="info-item g-mr-12">
+          <div> 型號:</div>
+          <input [(ngModel)]="model" type="text" pInputText>
+        </div>
+
+        <div class="info-item g-mr-12">
+          <div> 顏色:</div>
+          <input [(ngModel)]="color" type="text" pInputText>
+        </div>
+
+
+      </div>
+
+      <div class="item-info-wrapper">
+
+
+        <div class="info-item g-mr-12">
+          <div> 尺寸:</div>
+          <input [(ngModel)]="size" type="text" pInputText>
+        </div>
+
+        <div class="info-item g-mr-12">
+          <div> 備註:</div>
+          <input [(ngModel)]="itemNote" type="text" pInputText>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+    <p-divider></p-divider>
+
+
+
+
+
+
+
+
+
+
+    <div class="order-info-wrapper">
+      <div class="p-float-label">
+        <input [(ngModel)]="amount" id="float-input" type="number" pInputText>
+        <label for="float-input">數量</label>
+      </div>
+
+      <div class="p-float-label">
+        <input class="add-item" [(ngModel)]="price" id="float-input" type="number" pInputText>
+        <label for="float-input">價格</label>
+      </div>
+      <!-- <button pButton type="button" (click)="addToPurchaseItemList()">加入訂單</button> -->
+      <p-button (onClick)="addToPurchaseItemList()" label="加入訂單" class="g-ml-12"
+      styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+    </div>
+
+
+
+
+   
+    <p-divider></p-divider>
+
+    <div class="order-list-wrapper">
+      <div *ngFor="let item of itemViewList">
+        <div class="list-item">
+          名稱: {{item.itemName}} 數量: {{item.amount}} 價格: {{item.price}} 型號: {{item.model}}  顏色: {{item.color}} 尺寸: {{item.size}}
+          <p-button (onClick)="removeItem(item)" label="移除"
+          styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+      </div>
+    </div>
+    
+    <p-divider></p-divider>
+
+    <div class="purchase-order-wrapper">
+      <div class="input-wrapper">
+        <div>
+          日期:
+          <p-calendar [(ngModel)]="purchaseDate"></p-calendar>
+        </div>
+
+        <div class="g-mr-12"></div>
+    
+        <div class="p-float-label g-mr-12">
+          <input [(ngModel)]="payment" id="float-input" type="text" pInputText>
+          <label for="float-input">付款方式</label>
+        </div>
+    
+        <div class="p-float-label g-mr-12">
+          <input [(ngModel)]="purchaseSerialNo" id="float-input" type="text" pInputText>
+          <label for="float-input">單號</label>
+        </div>
+    
+      </div>
+     
+  
+      <div class="g-sub-title g-mt-12">
+        總價: {{totalPrice}}
+      </div>
+    </div>
+
+    
+
+    <div class="p-float-label">
+      <input class="add-item" [(ngModel)]="purchaseTotalPrice" id="float-input" type="text" pInputText>
+      <label for="float-input">實付</label>
+    </div>
+
+    <div class="g-mt-12">
+      <p-button (onClick)="addNewPurchase()" label="確認" 
+      styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+      <p-divider></p-divider>
+    </div>
+
+  </div>
+</div>

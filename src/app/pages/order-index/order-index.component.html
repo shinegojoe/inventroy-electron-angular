@@ -1,0 +1,209 @@
+<div class="order-index-container">
+  <div class="content-wrapper">
+
+    <div>
+
+      <div class="search-wrapper">
+        <div class="vender-select-wrapper">
+          <div class="g-sub-title">選擇廠商: </div>
+          <div class="g-ml-12">
+            <app-auto-vender (selectUpdate)="selectedVenderUpdate($event)"></app-auto-vender>
+          </div>
+        </div>
+
+        <div class="g-ml-12 item-select-wrapper">
+          <div class="g-sub-title">選擇產品: </div>
+
+          <p-autoComplete [(ngModel)]="selectedItemModel" [suggestions]="itemNameSuggList" field="name"
+            (completeMethod)="searchItemName($event)"></p-autoComplete>
+          <!-- <button pButton (click)="searchClick()">搜尋庫存</button> -->
+
+          <p-button class="g-ml-12" (onClick)="searchClick()" label="搜尋庫存"
+            styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div>
+
+      <p-table [value]="inventoryList" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>日期</th>
+            <th>廠商</th>
+            <th>名稱</th>
+            <th>金額</th>
+            <th>數量</th>
+            <th>型號</th>
+            <th>尺寸</th>
+            <th>顏色</th>
+            <th>備註</th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>{{ item.inventory.createDate }}</td>
+            <td>{{ item.vender.name }}</td>
+            <td>{{ item.item.name }}</td>
+            <td>{{ item.purchaseItem.price }}</td>
+
+            <td>{{ item.inventory.amount }}</td>
+            <td>{{ item.purchaseItem.model }}</td>
+            <td>{{ item.purchaseItem.size }}</td>
+            <td>{{ item.purchaseItem.color }}</td>
+            <td>{{ item.purchaseItem.note }}</td>
+
+            <td>
+              <!-- <button (click)="addSelectedList(item)" pButton>加入</button> -->
+              <p-button class="g-ml-12" (onClick)="addSelectedList(item)" label="加入"
+                styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+
+    </div>
+
+    <div class="selected-list-wrapper">
+      <div class="g-title g-mt-24">顧客訂單</div>
+      <div class="g-sub-title g-mt-12">訂購清單</div>
+
+      <div *ngFor="let orderItemView of selectedList">
+        <div class="row-item">
+          <div>
+            {{orderItemView.inventoryVO.item.name}}
+          </div>
+
+          <div class="p-float-label g-ml-12">
+            <input id="float-input" (ngModelChange)="amountUpdate($event)" [(ngModel)]="orderItemView.amount" type="number" pInputText>
+            <label for="float-input">數量</label>
+          </div>
+          <div class="p-float-label g-ml-12">
+            <input id="float-input" [(ngModel)]="orderItemView.note" type="text" pInputText>
+            <label for="float-input">備註</label>
+          </div>
+
+          <p-button class="g-ml-12" (onClick)="removeItem(orderItemView)" label="移除"
+            styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+        </div>
+
+      </div>
+      <div>總金額: {{orderPrice}}</div>
+    </div>
+
+
+    <div class="g-mt-24">
+      <div class="g-sub-title">訂單資訊</div>
+
+      <div class="p-float-label">
+        <p-calendar [(ngModel)]="createDate"></p-calendar>
+        <label for="float-input">日期</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.serialNo" type="text" pInputText>
+        <label for="float-input">單號</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" (blur)="checkSuck(order.purchaser, 'purchaser')" [(ngModel)]="order.purchaser"
+          type="text" pInputText>
+        <label for="float-input">購買人</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.purchaserPhone" type="text" pInputText>
+        <label for="float-input">購買人電話</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" (blur)="checkSuck(order.recipient, 'recipient')" [(ngModel)]="order.recipient"
+          type="text" pInputText>
+        <label for="float-input">收件人</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.recipientPhone" type="text" pInputText>
+        <label for="float-input">收件人電話</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.address" type="text" pInputText>
+        <label for="float-input">住址</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.receiptDate" type="text" pInputText>
+        <label for="float-input">收貨時間</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.driver" type="text" pInputText>
+        <label for="float-input">司機</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.driverPhone" type="text" pInputText>
+        <label for="float-input">司機電話</label>
+      </div>
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.payment" type="text" pInputText>
+        <label for="float-input">付款方式</label>
+      </div>
+
+
+
+      <div class="note-item">
+
+        <div class="p-float-label">
+          <input id="float-input" [(ngModel)]="order.note" type="text" pInputText>
+          <label for="float-input">備註</label>
+        </div>
+
+        <div class="card flex justify-content-center">
+          <p-checkbox [inputId]="'isSuck'" [(ngModel)]="order.isSuck" [binary]="true" inputId="binary"></p-checkbox>
+          <label [for]="'isSuck'" class="ml-2">很機掰</label>
+  
+        </div>
+      </div>
+
+
+
+
+      <div class="p-float-label">
+        <input id="float-input" [(ngModel)]="order.totalPrice" type="text" pInputText>
+        <label for="float-input">總價</label>
+      </div>
+      <!-- <div class="flex flex-wrap gap-3">
+        <div class="flex align-items-center">
+            <p-radioButton name="good" value={{0}} [(ngModel)]="order.isSuck" inputId="ingredient1"></p-radioButton>
+            <label for="ingredient1" class="ml-2">還可以</label>
+        </div>
+        
+        <div class="flex align-items-center">
+            <p-radioButton name="noGood" value={{1}} [(ngModel)]="order.isSuck" inputId="ingredient2"></p-radioButton>
+            <label for="ingredient2" class="ml-2">很機掰</label>
+        </div> -->
+
+
+
+      <div class="g-mt-12">
+        <p-button  (onClick)="addNewOrder()" label="確認"
+        styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+      </div>
+    
+
+
+    </div>
+
+
+
+  </div>
+</div>

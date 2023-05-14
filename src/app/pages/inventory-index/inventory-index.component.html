@@ -1,0 +1,78 @@
+<div class="inventory-conteainer">
+  <div class="content-wrapper">
+
+    <div class="vender-select-wrapper">
+      <div class="g-sub-title">選擇廠商</div>
+      <div class="g-ml-12">
+        <app-auto-vender (selectUpdate)="selectedVenderUpdate($event)"></app-auto-vender>
+
+      </div>
+      <!-- <div *ngIf="selectedVender.name !==''"> 已選: {{selectedVender.name}}</div>
+      <div  *ngIf="!selectedVender.name">尚未選擇</div> -->
+      <div class="g-sub-title g-ml-12">選擇產品</div>
+      <p-autoComplete [(ngModel)]="selectedItemModel" [suggestions]="itemNameSuggList" field="name"
+      (completeMethod)="searchItemName($event)"></p-autoComplete>
+
+    <!-- <button pButton (click)="searchClick()">搜尋</button> -->
+    <p-button class="g-ml-12" (onClick)="searchClick()" label="搜尋"
+    styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+    </div>
+
+    <div>
+    
+
+    </div>
+    <div>
+      <p-table dataKey="inventory.id" [customSort]="true" [value]="inventoryList" editMode="row" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>日期</th>
+            <th>廠商</th>
+            <th>名稱</th>
+            <th>價格</th>
+            <th>數量</th>
+            <th>型號</th>
+            <th>尺寸</th>
+            <th>顏色</th>
+            <th>備註</th>
+            <th>操作</th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-editing="editing" >
+          <tr>
+            <td>{{ item.inventory.createDate }}</td>
+            <td>{{ item.vender.name }}</td>
+            <td>{{ item.item.name }}</td>
+            <td>{{ item.inventory.price }}</td>
+            <td>
+              <app-edit-item [title]="''" [isEdit]="editController.getIsEdit(item.inventory.id)" 
+               [(val)]="item.inventory.amount"></app-edit-item>
+            
+            </td>
+          
+            <!-- <td>{{ item.inventory.amount }}</td> -->
+            <td>{{ item.purchaseItem.model }}</td>
+            <td>{{ item.purchaseItem.size }}</td>
+            <td>{{ item.purchaseItem.color }}</td>
+            <td>{{ item.purchaseItem.note }}</td>
+            <td>
+              <div class="flex align-items-center justify-content-center gap-2">
+                <button *ngIf="!editController.getIsEdit(item.inventory.id)" pButton pRipple type="button" (click)="editClick(item.inventory)"
+                 icon="pi pi-pencil"  class="p-button-rounded p-button-text"></button>
+                <button *ngIf="editController.getIsEdit(item.inventory.id)" pButton pRipple type="button" (click)="editConfirm(item.inventory)"
+                 icon="pi pi-check"  class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                <button *ngIf="editController.getIsEdit(item.inventory.id)" pButton pRipple type="button" (click)="editCancel(item.inventory)"
+                 icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"></button>
+            </div>
+            </td>
+
+            <!-- <td><button (click)="addSelectedList(item)" pButton>加入</button></td> -->
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+
+  </div>
+</div>

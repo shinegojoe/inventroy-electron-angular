@@ -1,0 +1,113 @@
+<!-- <button (click)="test123()"> test </button> -->
+
+<div class="vender-container">
+    <div class="content-wrapper">
+
+        <div class="add-block">
+            <div class="g-title">新增廠商</div>
+            <div class="input-row">
+
+                <!-- <p-dropdown [options]="categoryList" [(ngModel)]="selectedCategory" optionLabel="name"></p-dropdown> -->
+
+
+                <div class="p-float-label">
+                    <input class="add-item" [(ngModel)]="name" id="float-input" type="text" pInputText>
+                    <label for="float-input">名稱</label>
+                </div>
+
+                <div class="p-float-label">
+                    <input class="add-item" [(ngModel)]="serialNo" id="float-input" type="text" pInputText>
+                    <label for="float-input">代號</label>
+                </div>
+
+                <div class="p-float-label">
+                    <input class="add-item" [(ngModel)]="phone" id="float-input" type="text" pInputText>
+                    <label for="float-input">電話</label>
+                </div>
+
+                <div class="p-float-label">
+                    <input class="add-item" [(ngModel)]="address" id="float-input" type="text" pInputText>
+                    <label for="float-input">地址</label>
+                </div>
+
+                <div class="p-float-label">
+                    <input class="add-item" [(ngModel)]="note" id="float-input" type="text" pInputText>
+                    <label for="float-input">備註</label>
+                </div>
+
+
+                <div class="btn-wrapper">
+                    <!-- <button class="add-item" pButton type="button" (click)="addVender()">新增</button> -->
+                    <p-button (onClick)="addVender()" label="新增"
+                        styleClass="p-button-text p-button-outlined p-button-rounded p-button-"></p-button>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="search-block">
+            <div class="g-title">查詢</div>
+            <div class="search-wrapper">
+
+                <app-auto-vender (selectUpdate)="venderAutoComplete($event)"></app-auto-vender>
+
+                <div *ngIf="checkIsSelected()" class="vender-info">
+
+                    <div class="info-item">
+                        <app-edit-item [width]="'320px'" [isEdit]="editItemController.getIsEdit(controllerId)" [(val)]="selectedItem.name"
+                            [title]="'名稱'" [type]="'text'"></app-edit-item>
+                    </div>
+                    <div class="info-item">
+                        <app-edit-item [width]="'320px'" class="info-item" [(val)]="selectedItem.serialNo" [title]="'代號:'"
+                        [isEdit]="editItemController.getIsEdit(controllerId)" 
+                            [type]="'text'"></app-edit-item>
+                    </div>
+                    <div class="info-item">
+                        <app-edit-item [width]="'320px'" class="info-item" [(val)]="selectedItem.phone" [title]="'電話:'"
+                        [isEdit]="editItemController.getIsEdit(controllerId)" 
+                            [type]="'text'"></app-edit-item>
+                    </div>
+                    <div class="info-item">
+                        <app-edit-item [width]="'320px'" class="info-item" [(val)]="selectedItem.address" [title]="'地址:'"
+                        [isEdit]="editItemController.getIsEdit(controllerId)" 
+                            [type]="'text'"></app-edit-item>
+                    </div>
+
+                    <div class="info-item">
+                        <app-edit-item [width]="'320px'" class="info-item" [(val)]="selectedItem.note" [title]="'備註:'"
+                        [isEdit]="editItemController.getIsEdit(controllerId)" 
+                            [type]="'text'"></app-edit-item>
+                    </div>
+
+
+                    <div class="btn-wrapper">
+                        <div class="flex align-items-center justify-content-center gap-2">
+                            <p-button (click)="editClick(selectedItem)" label="編輯"
+                                *ngIf="!editItemController.getIsEdit(controllerId)"
+                                styleClass="p-button-text p-button-outlined p-button-rounded p-button-">
+                            </p-button>
+
+                            <button *ngIf="editItemController.getIsEdit(controllerId)" pButton pRipple type="button"
+                                (click)="editConfirm(selectedItem)" icon="pi pi-check"
+                                class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editItemController.getIsEdit(controllerId)" pButton pRipple type="button"
+                                (click)="editCancel(selectedItem)" icon="pi pi-times"
+                                class="p-button-rounded p-button-text p-button-danger"></button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>

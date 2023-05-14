@@ -1,0 +1,6 @@
+<div>
+    <p-dropdown [options]="searchTypeList" [(ngModel)]="selectedSearchType" optionLabel="name"></p-dropdown>
+    <p-autoComplete (ngModelChange)="update($event)" [(ngModel)]="selectedVender" [suggestions]="venderSuggList" field="{{selectedSearchType.code}}"
+    (completeMethod)="venderAutoComplete($event)"></p-autoComplete>
+</div>
+

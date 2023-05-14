@@ -1,0 +1,199 @@
+<div class="purchase-manager-container">
+    <div class="content-wrapper">
+        <div class="search-rBtn-wrapper">
+            <div class="vender-select-wrapper">
+                <p-dropdown [options]="searchHistoryTypeList" (ngModelChange)="searchTypeUpdate($event)"
+                    [(ngModel)]="selectedSearchHistoryType" optionLabel="name"></p-dropdown>
+
+                <div *ngIf="selectedSearchHistoryType.code === 'purchaseNo'">
+                    <p-autoComplete [(ngModel)]="searchHelper.selectedModel" [suggestions]="purchaseSuggList"
+                        field="serialNo" (completeMethod)="purchaseAutoComplete($event)"></p-autoComplete>
+                </div>
+
+                <div *ngIf="selectedSearchHistoryType.code !== 'purchaseNo'">
+                    <p-autoComplete [(ngModel)]="searchHelper.selectedModel" [suggestions]="venderSuggList"
+                        field="{{selectedSearchHistoryType.code}}"
+                        (completeMethod)="venderAutoComplete($event)"></p-autoComplete>
+                </div>
+
+                <div>
+                    <span class="g-ml-12">開始:</span>
+                    <p-calendar [(ngModel)]="startDate"></p-calendar>
+                    <span class="g-ml-12">結束:</span>
+                    <p-calendar [(ngModel)]="endDate"></p-calendar>
+                </div>
+                <!-- <button pButton type="button" (click)="searchTest()">搜尋</button> -->
+                <p-button class="g-ml-12"  (onClick)="searchTest()" label="搜尋"
+                    styleClass="p-button-text p-button-outlined p-button-rounded">
+                </p-button>
+
+                <div class="flex flex-wrap gap-3 filter-wrapper">
+                    <div class="flex align-items-center filter-item">
+                        <p-radioButton name="all" value="all" [(ngModel)]="filterType"
+                            (ngModelChange)="listFilterUpdate($event)" inputId="ingredient1"></p-radioButton>
+                        <label for="ingredient1" class="ml-2">全部</label>
+                    </div>
+
+                    <div class="flex align-items-center filter-item">
+                        <p-radioButton name="uncompleted" value="uncompleted" [(ngModel)]="filterType"
+                            (ngModelChange)="listFilterUpdate($event)" inputId="ingredient2"></p-radioButton>
+                        <label for="ingredient2" class="ml-2">未完成</label>
+                    </div>
+
+                    <div class="flex align-items-center filter-item">
+                        <p-radioButton name="completed" value="completed" [(ngModel)]="filterType"
+                            (ngModelChange)="listFilterUpdate($event)" inputId="ingredient3"></p-radioButton>
+                        <label for="ingredient3" class="ml-2">已完成</label>
+                    </div>
+
+                </div>
+                <!-- <button pButton type="button">搜尋未結帳單</button> -->
+                <p-button class="g-ml-12"  (onClick)="searchAllUnPayList()" label="搜尋所有未結帳單"
+                styleClass="p-button-text p-button-outlined p-button-rounded">
+            </p-button>
+
+            </div>
+
+
+
+
+
+
+
+
+        </div>
+
+        <div class="purchase-list">
+
+            <!-- editMode="row" [value]="purchaseList" sortField="purchase.createDate" [sortOrder]="-1"
+            sortMode="single" dataKey="purchase.id" rowGroupMode="subheader" groupRowsBy="purchase.id" -->
+
+
+            <div class="card">
+                <p-table editMode="row" [value]="purchaseList" [customSort]="true" dataKey="purchase.id"
+                    rowGroupMode="subheader" groupRowsBy="purchase.id" [tableStyle]="{'min-width': '70rem'}">
+                    <ng-template pTemplate="header">
+                        <!-- <tr>
+                    <th style="width:20%">日期</th>
+                    <th style="width:20%">單號</th>
+    
+                  </tr> -->
+                    </ng-template>
+                    <ng-template pTemplate="groupheader" let-item let-rowIndex="rowIndex" let-expanded="expanded">
+                        <tr>
+                            <td colspan="9">
+                                <div class="row-item">
+                                    <!-- <button type="button" pButton pRipple [pRowToggler]="item"
+                          class="p-button-text p-button-rounded p-button-plain mr-2"
+                          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button> -->
+
+                                    <button type="button" pButton pRipple [pRowToggler]="item"
+                                        class="p-button-text p-button-rounded p-button-plain"
+                                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                                    </button>
+
+                                    <div> <span class="g-bold g-m-6">日期:</span>{{item.purchase.createDate}}</div>
+                                    <div> <span class="g-bold g-m-6">單號:</span>{{item.purchase.serialNo}}</div>
+                                    <div> <span class="g-bold g-m-6">狀態:</span> 
+                                        <span [ngClass]="checkStateTextStyle(item.purchase.isDone)">
+                                            {{checkPurchaseState(item.purchase.isDone)}} 
+                                        </span></div>
+
+
+                                    <p-button class="g-ml-12" [disabled]="item.purchase.isDone" (onClick)="setIsDone(item.purchase)"
+                                        label="完成"
+                                        styleClass="p-button-text p-button-outlined p-button-rounded p-button-"></p-button>
+
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <!-- <ng-template pTemplate="groupfooter" let-customer>
+                      <tr class="p-rowgroup-footer">
+                          <td colspan="4" style="text-align: right">Total Customers</td>
+                          <td>{{calculateCustomerTotal(customer.representative.name)}}</td>
+                      </tr>
+                  </ng-template> -->
+                    <ng-template pTemplate="rowexpansion" let-item let-editing="editing">
+
+                        <tr *ngFor="let purchaseItem of item.purchaseItemList">
+                            <td>
+                                <div>廠商: {{purchaseItem.venderName}}</div>
+                            </td>
+                            <td>
+                                名稱:
+                                {{purchaseItem.itemName}}
+                                <!-- <app-edit-item [title]="'名稱'" [isEdit]="purchaseItem.isEdit"
+                                    [(val)]="purchaseItem.itemName"></app-edit-item> -->
+                            </td>
+                            <td>
+                                序號:
+                                {{purchaseItem.itemNo}}
+                            </td>
+
+                            <td>
+
+                                <app-edit-item [title]="'型號:'"
+                                    [isEdit]="editController.getIsEdit(purchaseItem.purchaseId)"
+                                    [(val)]="purchaseItem.model"></app-edit-item>
+                            </td>
+
+                            <td>
+
+                                <app-edit-item [title]="'顏色:'"
+                                    [isEdit]="editController.getIsEdit(purchaseItem.purchaseId)"
+                                    [(val)]="purchaseItem.color"></app-edit-item>
+                            </td>
+
+                            <td>
+
+                                <app-edit-item [title]="'尺寸:'"
+                                    [isEdit]="editController.getIsEdit(purchaseItem.purchaseId)"
+                                    [(val)]="purchaseItem.size"></app-edit-item>
+                            </td>
+
+                            <td>
+
+                                <app-edit-item [title]="'價格:'"
+                                    [isEdit]="editController.getIsEdit(purchaseItem.purchaseId)"
+                                    [(val)]="purchaseItem.price"></app-edit-item>
+                            </td>
+                            <td>
+                                <app-edit-item [title]="'數量:'"
+                                    [isEdit]="editController.getIsEdit(purchaseItem.purchaseId)"
+                                    [(val)]="purchaseItem.amount"></app-edit-item>
+                            </td>
+                            <td>
+
+                                <!-- <p-button label="修改" (onClick)="editClick(purchaseItem)"
+                                styleClass="p-button-text p-button-outlined p-button-rounded p-button"></p-button> -->
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button *ngIf="!editController.getIsEdit(purchaseItem.purchaseId)" pButton pRipple
+                                        type="button" (click)="editClick(purchaseItem)" icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editController.getIsEdit(purchaseItem.purchaseId)" pButton pRipple
+                                        type="button" (click)="editConfirm(purchaseItem)" icon="pi pi-check"
+                                        class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                    <button *ngIf="editController.getIsEdit(purchaseItem.purchaseId)" pButton pRipple
+                                        type="button" (click)="editCancel(purchaseItem)" icon="pi pi-times"
+                                        class="p-button-rounded p-button-text p-button-danger"></button>
+                                </div>
+
+
+                            </td>
+                            <!-- <td>
+                        <button (click)="addToInventory(purchaseItem)" pButton type="button">入庫</button>
+                      </td> -->
+                        </tr>
+                    </ng-template>
+
+
+                </p-table>
+            </div>
+        </div>
+
+
+    </div>
+</div>

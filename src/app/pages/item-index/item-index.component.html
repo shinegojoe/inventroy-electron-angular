@@ -1,0 +1,81 @@
+<div class="item-container">
+  <div class="content-wrapper">
+    <div class="add-item-block">
+      <div>新增</div>
+      <div class="input-row">
+
+        <p-dropdown [options]="categoryList" [(ngModel)]="selectedCategory" optionLabel="name"></p-dropdown>
+
+        <p-autoComplete [(ngModel)]="selectedVender" [suggestions]="venderSuggList" field="name"
+          (completeMethod)="venderAutoComplete($event)"></p-autoComplete>
+
+
+        <div class="p-float-label">
+          <input [(ngModel)]="newItem.name" id="float-input" type="text" pInputText>
+          <label for="float-input">name</label>
+        </div>
+
+        <div class="p-float-label">
+          <input [(ngModel)]="newItem.serialNo" id="float-input" type="text" pInputText>
+          <label for="float-input">serialNo</label>
+        </div>
+
+
+
+        <div>
+          <button pButton type="button" (click)="addItem()">add</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="search-item-block">
+      <!-- 用選的 or search by serialNo-->
+
+      <div>
+        序號搜尋
+        <p-autoComplete [(ngModel)]="selectedItem" [suggestions]="itemSerialSuggList" field="serialNo"
+        (completeMethod)="itemSerialAutoComplete($event)"></p-autoComplete>
+      </div>
+
+      <div>
+        <p-dropdown [options]="categoryList" [(ngModel)]="selectedCategory" optionLabel="name"></p-dropdown>
+
+        <p-autoComplete [(ngModel)]="selectedVender" [suggestions]="venderSuggList" field="name"
+          (completeMethod)="venderAutoComplete($event)"></p-autoComplete>
+
+        <p-autoComplete [(ngModel)]="selectedItem" [suggestions]="itemSuggList" field="name"
+          (completeMethod)="itemAutoComplete($event)"></p-autoComplete>
+
+      </div>
+
+
+      <div>
+        <app-item-view [item]="selectedItem"></app-item-view>
+        {{selectedItem.name}}
+        {{selectedItem.serialNo}}
+      </div>
+
+      <!-- <button (click)="getHistoryList()" pButton type="button">歷史紀錄</button> -->
+      <div *ngFor="let item of historyList">
+        {{item.serialNo}} / {{item.name}}
+      </div>
+
+
+      <div>
+        <button pButton type="button">修改</button>
+        <button pButton type="button">刪除</button>
+        <button  pButton type="button">更新項目</button>
+        <!-- <button (click)="setIsCurrentFalse()" pButton type="button">ppp</button> -->
+        <button (click)="addItem()" >add test</button>
+
+      </div>
+
+    </div>
+
+
+    <p-autoComplete [(ngModel)]="testItemModel" [suggestions]="testItemSugg" field="name"
+    (completeMethod)="testItemAutoComplete($event)"></p-autoComplete>
+  </div>
+</div>

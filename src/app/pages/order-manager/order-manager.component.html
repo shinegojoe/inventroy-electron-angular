@@ -1,0 +1,180 @@
+<div class="order-manager-container">
+    <div class="content-wrapper">
+        <div class="g-sub-title">訂單查詢</div>
+
+        <div class="order-search-block g-mt-12">
+            <div>
+                <p-dropdown [options]="categoryList" [(ngModel)]="selectedCategory"
+                    (ngModelChange)="selectUpdate($event)" optionLabel="name"></p-dropdown>
+
+                <p-autoComplete (ngModelChange)="valuleSelected($event)" [(ngModel)]="selectedOrderModel" [suggestions]="orderSuggList"
+                    field="{{selectedCategory.code}}" (completeMethod)="orderAutoComplete($event)">
+                </p-autoComplete>
+
+                <p-button class="g-ml-12" (onClick)="searchOrderClick()" label="搜尋"
+                    styleClass="p-button-text p-button-outlined p-button-rounded">
+                </p-button>
+            </div>
+        </div>
+
+        <div class="order-list g-mt-12">
+            <div class="card">
+                <p-table [value]="orderList"  dataKey="order.id" [customSort]="true"
+                    rowGroupMode="subheader" groupRowsBy="order.id" [tableStyle]="{'min-width': '70rem'}">
+                    <!-- <ng-template pTemplate="header">
+                        <div class="order-list-header">
+                            <div>x</div>
+                            <div>日期</div>
+                            <div>單號</div>
+                            <div>訂購人</div>
+
+                        </div>
+                    </ng-template> -->
+                    <ng-template pTemplate="groupheader" let-item let-rowIndex="rowIndex" let-expanded="expanded">
+
+                        <div class="order-item-wrapper">
+                            <div class="row-item">
+
+                                <button type="button" pButton pRipple [pRowToggler]="item"
+                                    class="p-button-text p-button-rounded p-button-plain"
+                                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                              
+                            </div>
+    
+                            <div class="sub-item">日期: {{item.order.createDate}}</div>
+    
+                            <div class="sub-item">單號: {{item.order.serialNo}}</div>
+    
+                            <div class="sub-item">訂購人: {{item.order.recipient}}</div>
+                            <div class="sub-item">狀態: {{item.order.isClosed}}</div>
+                            <!-- <p-button class="sub-item" label="新增" styleClass="p-button-text p-button-outlined p-button-rounded p-button-"></p-button> -->
+
+                            <p-button class="sub-item" label="完成" styleClass="p-button-text p-button-outlined p-button-rounded p-button-help"></p-button>
+                            <p-button (onClick)="open(item.order.id)"  class="sub-item"label="詳細" 
+                            styleClass="p-button-text p-button-outlined p-button-rounded p-button-success"></p-button>
+
+                        </div>
+
+                     
+
+                    </ng-template>
+
+                    <ng-template pTemplate="rowexpansion" let-item>
+                       
+                        <div *ngFor="let orderItem of item.orderItemVOList">
+                            <div class="sub-item-wrapper">
+                                <div class="sub-item">廠商: {{orderItem.venderName}}</div>
+                                <div class="sub-item">名稱: {{orderItem.itemName}}</div>
+                                <div class="sub-item">數量: {{orderItem.amount}}</div>
+                                <div class="sub-item">價格: {{orderItem.sellPrice}}</div>
+                                <div class="sub-item">型號: {{orderItem.model}}</div>
+                                <div class="sub-item">尺寸: {{orderItem.size}}</div>
+                                <div class="sub-item">顏色: {{orderItem.color}}</div>
+                                <div class="sub-item">備註: {{orderItem.note}}</div>
+                                <div class="sub-item">狀態: {{orderItem.isArrive}}</div>
+                                <div class="sub-item">送達日期: {{orderItem.arriveDate}}</div>
+                                <div class="sub-item">退貨日期: {{orderItem.returnDate}}</div>
+
+                                <!-- <button [disabled]="orderItem.arriveDate!==''" class="sub-item" pButton type="button" (click)="setArriveClick(orderItem)">確認送達</button> -->
+                                <!-- <button [disabled]="orderItem.returnDate!==''" class="sub-item" pButton (click)="returnClick(orderItem)" type="button">退貨</button> -->
+                                <p-button  class="sub-item" label="確認送達" styleClass="p-button-text p-button-outlined p-button-rounded"
+                                [disabled]="orderItem.arriveDate!==''" (click)="setArriveClick(orderItem)"></p-button>
+                                <p-button  class="sub-item" label="退貨" styleClass="p-button-text p-button-outlined p-button-rounded"
+                                [disabled]="orderItem.returnDate!==''" (click)="returnClick(orderItem)"></p-button>
+
+                              
+    
+                            </div>
+                          
+                        </div>
+
+                    </ng-template>
+
+
+                </p-table>
+            </div>
+            <p-divider></p-divider>
+            <div class="return-history-wrapper">
+                <div class="g-sub-title">退貨紀錄</div>
+                <div class="search-wrapper">
+                    <div>
+                        開始:
+                        <p-calendar [(ngModel)]="startDate"></p-calendar>
+                    </div>
+    
+                    <div class="g-ml-12">
+                        結束:
+                        <p-calendar [(ngModel)]="endDate"></p-calendar>
+                      </div>
+    
+                      <p-button class="g-ml-12" (onClick)="searchClick()" label="搜尋"
+                      styleClass="p-button-text p-button-outlined p-button-rounded"></p-button>
+                </div>
+              
+
+
+
+            </div>
+
+            <div>
+                <p-table [value]="returnItemList" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>日期</th>
+                        <th>廠商</th>
+                        <th>名稱</th>
+                        <th>價格</th>
+                        <th>數量</th>
+                        <th>型號</th>
+                        <th>尺寸</th>
+                        <th>顏色</th>
+                        <th>備註</th>
+                        <th>操作</th>
+            
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item>
+                      <tr>
+                        <td>{{ item.amount }}</td>
+                        <td>{{ item.arriveDate }}</td>
+                        <td>{{ item.isArrive }}</td>
+                        <td>{{ item.note }}</td>
+                        <td>{{ item.returnDate }}</td>
+                        <td>{{ item.sellPrice }}</td>
+                        <td>{{ item.sellPrice }}</td>
+                        <td>{{ item.sellPrice }}</td>
+                        <td>{{ item.sellPrice }}</td>
+                        <td>
+                            <p-button (onClick)="open(item.orderId)"  class="sub-item"label="訂單資訊" 
+                            styleClass="p-button-text p-button-outlined p-button-rounded p-button-success"></p-button>
+                        </td>
+            
+                        <!-- <td><button (click)="addSelectedList(item)" pButton>加入</button></td> -->
+                      </tr>
+                    </ng-template>
+                  </p-table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <p-confirmDialog #cd [style]="{width: '30vw'}">
+        <ng-template pTemplate="header">
+            <h3>{{modalTitle}}: </h3>
+            <div>
+                <p-calendar [(ngModel)]="returnDate"></p-calendar>
+
+            </div>
+
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
+            <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button>
+        </ng-template>
+    </p-confirmDialog>
+
+    <app-order-view (closeEvent)="orderViewClose()" [order]="orderView" [visible]="isOrderViewOn"></app-order-view>
+
+
+</div>

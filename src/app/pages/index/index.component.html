@@ -1,0 +1,42 @@
+<div>
+    <p-tabView (onChange)="handleChange($event)">
+        <p-tabPanel header="廠商">
+            <div *ngIf="index==0">
+                <app-vender-index></app-vender-index>
+            </div>
+
+           <!-- <app-list-page></app-list-page> -->
+           <!-- <app-history-page></app-history-page> -->
+        </p-tabPanel>
+        <p-tabPanel header="進貨">
+            <div *ngIf="index==1">
+                <!-- <app-item-index></app-item-index> -->
+                <app-purchase-index></app-purchase-index>
+
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="進貨管理">
+            <div *ngIf="index==2">
+                <app-purchase-manager></app-purchase-manager>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="庫存">
+            <div *ngIf="index==3">
+              <app-inventory-index></app-inventory-index>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="顧客訂單">
+            <div *ngIf="index==4">
+                <app-order-index></app-order-index>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="訂單管理">
+            <div *ngIf="index==5">
+                <app-order-manager></app-order-manager>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>

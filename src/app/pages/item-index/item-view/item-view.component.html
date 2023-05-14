@@ -1,0 +1,24 @@
+<div class="item-view-container">
+  <div class="content-wrapper">
+    <div>
+      item view
+    </div>
+
+    <div class="p-float-label">
+      <input [(ngModel)]="item.name" id="float-input" type="text" pInputText>
+      <label for="float-input">名稱(自動補完)</label>
+    </div>
+
+    <div class="p-float-label">
+      <input [(ngModel)]="item.serialNo" id="float-input" type="text" pInputText>
+      <label for="float-input">序號(自動補完)</label>
+    </div>
+
+    <div class="p-float-label">
+      <input [(ngModel)]="item.serialNo" id="float-input" type="text" pInputText>
+      <label for="float-input">備註</label>
+    </div>
+    廠商id + 名稱 + 序號為唯一ID, 不是就新增
+    新增後拿到inserted id, 加入歷史價格
+  </div>
+</div>
